@@ -167,7 +167,7 @@ linear_model |> performance::check_model(check = c("vif",
                                                    "normality"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-53-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
 ## Model statistics
 
@@ -251,13 +251,14 @@ summary_flex <- summary_table_trat |>
   flextable::align(align = "center", part = "all") |> 
   flextable::width(width = 1.5) |> 
   flextable::width(width = 0.75, j = 3:4) |> 
+  flextable::bg(bg = "white", part = "all") |> 
   flextable::bg(i = ~p < 0.05,
-                bg = "gray90")
+                bg = "gray70")
 
 summary_flex
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-57-1.png" width="900" />
+<img src="README_files/figure-gfm/unnamed-chunk-10-1.png" width="900" />
 
 ## Exporting
 
