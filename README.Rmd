@@ -1,0 +1,122 @@
+---
+title: "How to make tables from lineare models in R"
+author: "Edson Silva-Júnior"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+# How to make tables from lineare models in R
+
+# Required packages
+
+```{r}
+library(ecodados)
+
+library(tidyverse)
+
+library(performance)
+
+library(flextable)
+```
+
+# Data
+
+## Importing 
+
+```{r}
+data <- ecodados::regressoes
+```
+
+## Visualizing 
+
+```{r}
+data
+```
+
+# Modeling
+
+## Creating a linear model 
+
+```{r}
+linear_model <- lm(CRC ~.,
+                   data = data[, 2:4]) 
+```
+
+## Check assuptions 
+
+```{r}
+linear_model |> performance::check_normality()
+
+linear_model |> performance::check_heteroscedasticity()
+
+linear_model |> performance::check_model(check = c("vif",
+                                                   "homogeneity",
+                                                   "qq",
+                                                   "normality"))
+```
+
+## Model statistics 
+
+```{r}
+linear_model |> 
+  summary()
+```
+
+# Statistics table 
+
+## Making a dataframe with summary statístics
+
+```{r}
+summary_table <- linear_model |> 
+  summary()
+
+summary_table <- summary_table$coefficients |> 
+  as.data.frame() |> 
+  tibble::rownames_to_column()
+
+summary_table
+```
+
+## Editing the table 
+
+```{r}
+summary_table_trat <- summary_table |>
+  dplyr::mutate(Estimate = Estimate |> round(4),
+                `Std. Error` = `Std. Error` |> round(4),
+                `t value` = `t value` |> round(2),
+                `Pr(>|t|)` = dplyr::case_when(`Pr(>|t|)` < 0.01 ~ "< 0.01",
+                                              .default = `Pr(>|t|)` |> 
+                                                round(3) |> 
+                                                as.character()),
+                rowname = rowname |> stringr::str_remove_all("\\(|\\)")) |> 
+  tidyr::unite(2:3,
+               col = "β1 ± SE",
+               sep = " ± ") |> 
+  dplyr::rename("Predictor" = rowname,
+                "t" = `t value`,
+                "p" = `Pr(>|t|)`)
+
+summary_table_trat
+```
+
+# Turning into a flextable
+
+```{r}
+summary_flex <- summary_table_trat |> 
+  flextable::flextable() |> 
+  flextable::align(align = "center", part = "all") |> 
+  flextable::width(width = 1.5) |> 
+  flextable::width(width = 0.75, j = 3:4) |> 
+  flextable::bg(i = ~p < 0.05,
+                bg = "gray90")
+
+summary_flex
+```
+
+## Exporting
+
+```{r}
+summary_flex |> 
+  flextable::save_as_docx(path = "linear_modelo_table.docx")
+```
+
