@@ -1,26 +1,92 @@
 # How to make tables from lineare models in R
 
+Linear models are one od best tools to statísticla analysis to linear
+variables, able us to understand patterns and tendences about our data.
+Despite its aplicabilities, it’s often researches having dificultes to
+automatizate tables with them linear models results.
+
+In R, with simple annd few steps, we can builds and export tables with
+our statístics values.
+
 # Required packages
+
+To build our table, we use the required packages:
+
+\-[ecodados](https://github.com/paternogbc/ecodados): to load our data
+to construct our model;
+
+\-[tidyverse](https://tidyverse.tidyverse.org/): to transform and
+manipulate our data;
+
+\-[performance](https://easystats.github.io/performance/): to check
+[linear model
+assumptions](https://www.jmp.com/en/statistics-knowledge-portal/what-is-regression/simple-linear-regression-assumptions);
+
+\-[flextable](https://ardata-fr.github.io/flextable-book/): to construct
+our statistics and exportable table.
 
 ``` r
 library(ecodados)
 
 library(tidyverse)
+```
 
+    ## ── Attaching core tidyverse packages ────────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+    ## ✔ purrr     1.1.0     
+    ## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(performance)
 
 library(flextable)
 ```
 
+    ## 
+    ## Anexando pacote: 'flextable'
+    ## 
+    ## O seguinte objeto é mascarado por 'package:purrr':
+    ## 
+    ##     compose
+
 # Data
 
 ## Importing
+
+Our data are a dataset about amphibians, contening information about:
+
+\-`Município`: information about municipality where its amphibian was
+sampled;
+
+\-`CRC`: information about amphibian [Snout-Vent
+Length](https://en.wikipedia.org/wiki/Snout–vent_length) (“CRC”, in
+portuguese) in millimeters, the length between its snout to its vent, a
+large-used measure in
+[herpetology](https://en.wikipedia.org/wiki/Herpetology);
+
+\-`Temperature`: municipality anual mean temperature where amphibian was
+sampled, in C°;
+
+\-`Precipitação`: municipality anual mean precipitation where amphibian
+was sampled, in millimeters.
+
+Those data were originaly from [Boaratti & Silva
+(2025)](https://onlinelibrary.wiley.com/doi/full/10.1111/aec.12267?casa_token=o9CICQ4-dEUAAAAA%3AWlTT9C8ujxahR7xR7RNcQbHeCVxAATTFwtD6esgl0IWReB0164RHNXNM-YjqLDtbIpY55ydgNWxvgHc).
 
 ``` r
 data <- ecodados::regressoes
 ```
 
 ## Visualizing
+
+To check if `CRC` to `Precipitação` variables are numeric variables, we
+use `glimpse()` function, from `dplyr`, a `tidyverse package`.
 
 ``` r
 data
@@ -137,9 +203,27 @@ data
     ## 108           Vila_Paredao 23.68528    22.75250      1682.20
     ## 109         Vitoria_Brasil 22.93436    22.54833      1187.00
 
+``` r
+data |> dplyr::glimpse()
+```
+
+    ## Rows: 109
+    ## Columns: 4
+    ## $ Municipio    [3m[38;5;246m<chr>[39m[23m "Acorizal"[38;5;246m, [39m"Alpinopolis"[38;5;246m, [39m"Alto_Paraiso"[38;5;246m, [39m"Americana"[38;5;246m, [39m"Ap…
+    ## $ CRC          [3m[38;5;246m<dbl>[39m[23m 22.98816[38;5;246m, [39m22.91788[38;5;246m, [39m21.97629[38;5;246m, [39m23.32453[38;5;246m, [39m22.83651[38;5;246m, [39m20.86989[38;5;246m,[39m…
+    ## $ Temperatura  [3m[38;5;246m<dbl>[39m[23m 24.13000[38;5;246m, [39m20.09417[38;5;246m, [39m21.86167[38;5;246m, [39m20.28333[38;5;246m, [39m25.47333[38;5;246m, [39m20.12167[38;5;246m,[39m…
+    ## $ Precipitacao [3m[38;5;246m<dbl>[39m[23m 1228.2[38;5;246m, [39m1487.6[38;5;246m, [39m1812.4[38;5;246m, [39m1266.2[38;5;246m, [39m2154.0[38;5;246m, [39m1269.2[38;5;246m, [39m1940.6[38;5;246m, [39m146…
+
 # Modeling
 
+To our analysis, we want to test if temperature and precipitation affect
+amphibian CRC.
+
 ## Creating a linear model
+
+To perform our model, we use `lm()` function, indicating CRC as response
+variable and else variables (`.`) as predictor variables, filtering only
+variables from dataset (`[, 2:4]`).
 
 ``` r
 linear_model <- lm(CRC ~.,
@@ -147,6 +231,49 @@ linear_model <- lm(CRC ~.,
 ```
 
 ## Check assuptions
+
+Linear models have some assumptions, to minimize [Type-1 error
+chances](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors):
+
+-Independence for samples units: sample units may be independent
+information, not to be influenced by else sample units;
+
+-Avoiding multidisciplinary: in case for multiple linear models,
+predictor variables may not to be correlated, checking through
+correlation indexes or VIF values;
+
+-Errors may be normal distributed (Gaussian distribution): errors
+(residuals, the differences between data values and predicted values)
+should form or to next to a Gaussian distribution;
+
+-Errors may be homocedasticity variade: the relationship between errors
+and predicted values may to form or to next to homogenize variation.
+
+To check those assumptions, we use `performance` package:
+
+\-`multicollinearity()`: check whether there is model multicolinearity,
+through VIF values. Traditionally, researches adopted `VIF = 5` as
+threshold to detect critic multicolinearity;
+
+\-`check_normality()`: use Shappiro-Wilki hypothesis-test to test
+whether residuals are next-gaussian distributed;
+
+\-`check_heteroscedasticity()`: use Breuch-Peagan hypothesis-test to
+test whether residuals are next-homogenean varianced;
+
+\-`check_model()`: to visualize all previously assumptions from graphs.
+
+``` r
+linear_model |> performance::multicollinearity()
+```
+
+    ## # Check for Multicollinearity
+    ## 
+    ## Low Correlation
+    ## 
+    ##          Term  VIF   VIF 95% CI adj. VIF Tolerance Tolerance 95% CI
+    ##   Temperatura 1.04 [1.00, 5.45]     1.02      0.96     [0.18, 1.00]
+    ##  Precipitacao 1.04 [1.00, 5.45]     1.02      0.96     [0.18, 1.00]
 
 ``` r
 linear_model |> performance::check_normality()
@@ -167,7 +294,10 @@ linear_model |> performance::check_model(check = c("vif",
                                                    "normality"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+
+now we check all assumptions were accepted, we can continue to construct
+our table.
 
 ## Model statistics
 
@@ -258,7 +388,7 @@ summary_flex <- summary_table_trat |>
 summary_flex
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-10-1.png" width="900" />
+<img src="README_files/figure-gfm/unnamed-chunk-17-1.png" width="900" />
 
 ## Exporting
 
