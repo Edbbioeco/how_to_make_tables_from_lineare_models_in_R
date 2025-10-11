@@ -2,7 +2,13 @@
 title: "How to make tables from lineare models in R"
 author: "Edson Silva-Júnior"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document:
+    toc: true
+    toc_float:
+      collapsed: false
+      smooth_scroll: true
+    toc_depth: 2
 ---
 
 # How to make tables from lineare models in R
@@ -15,13 +21,13 @@ In R, with simple annd few steps, we can builds and  export tables with our stat
 
 To build our table, we use the required packages:
 
--[ecodados](https://github.com/paternogbc/ecodados): to load our data to construct our model;
+- [ecodados](https://github.com/paternogbc/ecodados): to load our data to construct our model;
 
--[tidyverse](https://tidyverse.tidyverse.org/): to transform and manipulate our data;
+- [tidyverse](https://tidyverse.tidyverse.org/): to transform and manipulate our data;
 
--[performance](https://easystats.github.io/performance/): to check [linear model assumptions](https://www.jmp.com/en/statistics-knowledge-portal/what-is-regression/simple-linear-regression-assumptions);
+- [performance](https://easystats.github.io/performance/): to check [linear model assumptions](https://www.jmp.com/en/statistics-knowledge-portal/what-is-regression/simple-linear-regression-assumptions);
 
--[flextable](https://ardata-fr.github.io/flextable-book/): to construct our statistics and exportable table.
+- [flextable](https://ardata-fr.github.io/flextable-book/): to construct our statistics and exportable table.
 
 ```{r}
 library(ecodados)
@@ -39,13 +45,13 @@ library(flextable)
 
 Our data are a dataset about amphibians, contening information about:
 
--`Município`: information about municipality where its amphibian was sampled;
+- `Município`: information about municipality where its amphibian was sampled;
 
--`CRC`: information about amphibian [Snout-Vent Length](https://en.wikipedia.org/wiki/Snout–vent_length) ("CRC", in portuguese) in millimeters, the length between its snout to its vent, a large-used measure in [herpetology](https://en.wikipedia.org/wiki/Herpetology);
+- `CRC`: information about amphibian [Snout-Vent Length](https://en.wikipedia.org/wiki/Snout–vent_length) ("CRC", in portuguese) in millimeters, the length between its snout to its vent, a large-used measure in [herpetology](https://en.wikipedia.org/wiki/Herpetology);
 
--`Temperature`: municipality anual mean temperature where amphibian was sampled, in C°;
+- `Temperature`: municipality anual mean temperature where amphibian was sampled, in C°;
 
--`Precipitação`: municipality anual mean precipitation where amphibian was sampled, in millimeters.
+- `Precipitação`: municipality anual mean precipitation where amphibian was sampled, in millimeters.
 
 Those data were originaly from [Boaratti & Silva (2025)](https://onlinelibrary.wiley.com/doi/full/10.1111/aec.12267?casa_token=o9CICQ4-dEUAAAAA%3AWlTT9C8ujxahR7xR7RNcQbHeCVxAATTFwtD6esgl0IWReB0164RHNXNM-YjqLDtbIpY55ydgNWxvgHc).
 
@@ -80,23 +86,23 @@ linear_model <- lm(CRC ~.,
 
 Linear models have some assumptions, to minimize [Type-1 error chances](https://en.wikipedia.org/wiki/Type_I_and_type_II_errors):
 
--Independence for samples units: sample units may be independent information, not to be influenced by else sample units;
+- Independence for samples units: sample units may be independent information, not to be influenced by else sample units;
 
--Avoiding multidisciplinary: in case for multiple linear models, predictor variables may not to be correlated, checking through correlation indexes or VIF values;
+- Avoiding multidisciplinary: in case for multiple linear models, predictor variables may not to be correlated, checking through correlation indexes or VIF values;
 
--Errors may be normal distributed (Gaussian distribution): errors (residuals, the differences between data values and predicted values) should form or to next to a Gaussian distribution;
+- Errors may be normal distributed (Gaussian distribution): errors (residuals, the differences between data values and predicted values) should form or to next to a Gaussian distribution;
 
--Errors may be homocedasticity variade: the relationship between errors and predicted values may to form or to next to homogenize variation.
+- Errors may be homocedasticity variade: the relationship between errors and predicted values may to form or to next to homogenize variation.
 
 To check those assumptions, we use `performance` package:
 
--`multicollinearity()`: check whether there is model multicolinearity, through VIF values. Traditionally, researches adopted `VIF = 5` as threshold to detect critic multicolinearity;
+- `multicollinearity()`: check whether there is model multicolinearity, through VIF values. Traditionally, researches adopted `VIF = 5` as threshold to detect critic multicolinearity;
 
--`check_normality()`: use Shappiro-Wilki hypothesis-test to test whether residuals are next-gaussian distributed;
+- `check_normality()`: use Shappiro-Wilki hypothesis-test to test whether residuals are next-gaussian distributed;
 
--`check_heteroscedasticity()`: use Breuch-Peagan hypothesis-test to test whether residuals are next-homogenean varianced;
+- `check_heteroscedasticity()`: use Breuch-Peagan hypothesis-test to test whether residuals are next-homogenean varianced;
 
--`check_model()`: to visualize all previously assumptions from graphs.
+- `check_model()`: to visualize all previously assumptions from graphs.
 
 ```{r}
 linear_model |> performance::multicollinearity()
@@ -125,6 +131,14 @@ linear_model |>
 Notice only temperature predictor affect amphibian SVL, but not to precipitation predictor. We want to show those results.
 
 # Statistics table 
+
+In linear models results reports, it's mainly important presents those statistics to readers understand our results:
+
+- Mean estimated coefficient ± standard error (β1 ± SE): the meansuring about the ratio mudance affected response variable by increase 1 in predictor variable value and its standard error. Whether β1 > 0, positive effect. Whether β1 < 0, negative effect. Whether β1 ~= 0, low or nether effect;
+
+- critic-statistica value: value of a hypotheis-test to test predictor effect signifance. In linear regression and some Generalized Linear Models (GLMs), such as Gamma and Gaussian GLM, it's t-test. In else GLMs, such as Poisson and Beta GLM, it's z-test. Whether t/z~critic~ value > t/z~calculeted~ value, reject H~0~;
+
+- p: significance p-value for its test, according adopted α. Whether p < α, reject H~0~.
 
 ## Making a dataframe with summary statístics
 
