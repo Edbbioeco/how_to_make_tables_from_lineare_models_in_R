@@ -29,31 +29,11 @@ our statistics and exportable table.
 library(ecodados)
 
 library(tidyverse)
-```
 
-    ## ── Attaching core tidyverse packages ────────────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.2
-    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
-    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-    ## ✔ purrr     1.1.0     
-    ## ── Conflicts ──────────────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
 library(performance)
 
 library(flextable)
 ```
-
-    ## 
-    ## Anexando pacote: 'flextable'
-    ## 
-    ## O seguinte objeto é mascarado por 'package:purrr':
-    ## 
-    ##     compose
 
 # Data
 
@@ -209,10 +189,10 @@ data |> dplyr::glimpse()
 
     ## Rows: 109
     ## Columns: 4
-    ## $ Municipio    [3m[38;5;246m<chr>[39m[23m "Acorizal"[38;5;246m, [39m"Alpinopolis"[38;5;246m, [39m"Alto_Paraiso"[38;5;246m, [39m"Americana"[38;5;246m, [39m"Ap…
-    ## $ CRC          [3m[38;5;246m<dbl>[39m[23m 22.98816[38;5;246m, [39m22.91788[38;5;246m, [39m21.97629[38;5;246m, [39m23.32453[38;5;246m, [39m22.83651[38;5;246m, [39m20.86989[38;5;246m,[39m…
-    ## $ Temperatura  [3m[38;5;246m<dbl>[39m[23m 24.13000[38;5;246m, [39m20.09417[38;5;246m, [39m21.86167[38;5;246m, [39m20.28333[38;5;246m, [39m25.47333[38;5;246m, [39m20.12167[38;5;246m,[39m…
-    ## $ Precipitacao [3m[38;5;246m<dbl>[39m[23m 1228.2[38;5;246m, [39m1487.6[38;5;246m, [39m1812.4[38;5;246m, [39m1266.2[38;5;246m, [39m2154.0[38;5;246m, [39m1269.2[38;5;246m, [39m1940.6[38;5;246m, [39m146…
+    ## $ Municipio    [3m[38;5;246m<chr>[39m[23m "Acorizal"[38;5;246m, [39m"Alpinopolis"[38;5;246m, [39m"Alto_Paraiso"[38;5;246m, [39m"America…
+    ## $ CRC          [3m[38;5;246m<dbl>[39m[23m 22.98816[38;5;246m, [39m22.91788[38;5;246m, [39m21.97629[38;5;246m, [39m23.32453[38;5;246m, [39m22.83651[38;5;246m, [39m2…
+    ## $ Temperatura  [3m[38;5;246m<dbl>[39m[23m 24.13000[38;5;246m, [39m20.09417[38;5;246m, [39m21.86167[38;5;246m, [39m20.28333[38;5;246m, [39m25.47333[38;5;246m, [39m2…
+    ## $ Precipitacao [3m[38;5;246m<dbl>[39m[23m 1228.2[38;5;246m, [39m1487.6[38;5;246m, [39m1812.4[38;5;246m, [39m1266.2[38;5;246m, [39m2154.0[38;5;246m, [39m1269.2[38;5;246m, [39m194…
 
 # Modeling
 
@@ -294,12 +274,15 @@ linear_model |> performance::check_model(check = c("vif",
                                                    "normality"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
 now we check all assumptions were accepted, we can continue to construct
 our table.
 
 ## Model statistics
+
+In linear models objects, such as `lm()` and `glm()` functions, to acess
+models statistics values, we use `summary()` function.
 
 ``` r
 linear_model |> 
@@ -325,6 +308,9 @@ linear_model |>
     ## Residual standard error: 1.44 on 106 degrees of freedom
     ## Multiple R-squared:  0.2751, Adjusted R-squared:  0.2614 
     ## F-statistic: 20.12 on 2 and 106 DF,  p-value: 3.927e-08
+
+Notice only temperature predictor affect amphibian SVL, but not to
+precipitation predictor. We want to show those results.
 
 # Statistics table
 
@@ -388,7 +374,7 @@ summary_flex <- summary_table_trat |>
 summary_flex
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-17-1.png" width="900" />
+<img src="README_files/figure-gfm/unnamed-chunk-12-1.png" width="900" />
 
 ## Exporting
 

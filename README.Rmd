@@ -115,10 +115,14 @@ now we check all assumptions were accepted, we can continue to construct our tab
 
 ## Model statistics 
 
+In linear models objects, such as `lm()` and `glm()` functions, to acess models statistics values, we use `summary()` function.
+
 ```{r}
 linear_model |> 
   summary()
 ```
+
+Notice only temperature predictor affect amphibian SVL, but not to precipitation predictor. We want to show those results.
 
 # Statistics table 
 
