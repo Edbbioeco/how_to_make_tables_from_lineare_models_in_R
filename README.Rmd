@@ -142,6 +142,8 @@ In linear models results reports, it's mainly important presents those statistic
 
 ## Making a dataframe with summary statístics
 
+When we use a `summary()` function a linear model object, it make a objet contening a sub-object, `coefficients`. That's what contain our statistics we want. To acess it, we can use `$` operator, and informing sub-object name. Next, we turn it into a dataframe object, using `as.data.frame` function, and turn row names into a column, using `rownames_to_column()`, from `tibble` package, one of tidyverse packages.
+
 ```{r}
 summary_table <- linear_model |> 
   summary()
@@ -154,6 +156,16 @@ summary_table
 ```
 
 ## Editing the table 
+
+Next step is to edit our dataframe. First, using `mutate()` function, from `dplyr` package, one of tidyverse packages, we:
+
+- Around `Estimate` and `Std. Error` columns decimal values count to only 4;
+
+- Around `t value` column decimal values count to only 2;
+
+- Replace `Pr(>|t|)` values < 0.01, to character "< 0.01" and around else ones to only 3 decimal values as character;
+
+- Removindo strings `(` and `)` on line intercept in `rowname` column. 
 
 ```{r}
 summary_table_trat <- summary_table |>

@@ -11,7 +11,7 @@
 
 <meta name="author" content="Edson Silva-Júnior" />
 
-<meta name="date" content="2025-10-10" />
+<meta name="date" content="2025-10-11" />
 
 <title>How to make tables from lineare models in R</title>
 
@@ -1562,7 +1562,7 @@ font-size: 0.95em;
 <h1 class="title toc-ignore">How to make tables from lineare models in
 R</h1>
 <h4 class="author">Edson Silva-Júnior</h4>
-<h4 class="date">2025-10-10</h4>
+<h4 class="date">2025-10-11</h4>
 
 </div>
 
@@ -1876,6 +1876,13 @@ Whether p &lt; α, reject H<sub>0</sub>.</p></li>
 </ul>
 <div id="making-a-dataframe-with-summary-statístics" class="section level2">
 <h2>Making a dataframe with summary statístics</h2>
+<p>When we use a <code>summary()</code> function a linear model object,
+it make a objet contening a sub-object, <code>coefficients</code>.
+That’s what contain our statistics we want. To acess it, we can use
+<code>$</code> operator, and informing sub-object name. Next, we turn it
+into a dataframe object, using <code>as.data.frame</code> function, and
+turn row names into a column, using <code>rownames_to_column()</code>,
+from <code>tibble</code> package, one of tidyverse packages.</p>
 <pre class="r"><code>summary_table &lt;- linear_model |&gt; 
   summary()
 
@@ -1891,6 +1898,20 @@ summary_table</code></pre>
 </div>
 <div id="editing-the-table" class="section level2">
 <h2>Editing the table</h2>
+<p>Next step is to edit our dataframe. First, using
+<code>mutate()</code> function, from <code>dplyr</code> package, one of
+tidyverse packages, we:</p>
+<ul>
+<li><p>Around <code>Estimate</code> and <code>Std. Error</code> columns
+decimal values count to only 4;</p></li>
+<li><p>Around <code>t value</code> column decimal values count to only
+2;</p></li>
+<li><p>Replace <code>Pr(&gt;|t|)</code> values &lt; 0.01, to character
+“&lt; 0.01” and around else ones to only 3 decimal values as
+character;</p></li>
+<li><p>Removindo strings <code>(</code> and <code>)</code> on line
+intercept in <code>rowname</code> column.</p></li>
+</ul>
 <pre class="r"><code>summary_table_trat &lt;- summary_table |&gt;
   dplyr::mutate(Estimate = Estimate |&gt; round(4),
                 `Std. Error` = `Std. Error` |&gt; round(4),
@@ -1926,7 +1947,7 @@ summary_table_trat</code></pre>
                 bg = &quot;gray70&quot;)
 
 summary_flex</code></pre>
-<div class="tabwid"><style>.cl-c4202812{}.cl-c4140514{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-c418c392{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-c418f178{width:1.5in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c418f196{width:0.75in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c418f1a0{width:1.5in;background-color:rgba(179, 179, 179, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c418f1aa{width:0.75in;background-color:rgba(179, 179, 179, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c418f1ab{width:1.5in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-c418f1b4{width:0.75in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-c4202812"><thead><tr style="overflow-wrap:break-word;"><th class="cl-c418f178"><p class="cl-c418c392"><span class="cl-c4140514">Predictor</span></p></th><th class="cl-c418f178"><p class="cl-c418c392"><span class="cl-c4140514">β1 ± SE</span></p></th><th class="cl-c418f196"><p class="cl-c418c392"><span class="cl-c4140514">t</span></p></th><th class="cl-c418f196"><p class="cl-c418c392"><span class="cl-c4140514">p</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-c418f1a0"><p class="cl-c418c392"><span class="cl-c4140514">Intercept</span></p></td><td class="cl-c418f1a0"><p class="cl-c418c392"><span class="cl-c4140514">16.7163 ± 1.0109</span></p></td><td class="cl-c418f1aa"><p class="cl-c418c392"><span class="cl-c4140514">16.54</span></p></td><td class="cl-c418f1aa"><p class="cl-c418c392"><span class="cl-c4140514">&lt; 0.01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c418f1a0"><p class="cl-c418c392"><span class="cl-c4140514">Temperatura</span></p></td><td class="cl-c418f1a0"><p class="cl-c418c392"><span class="cl-c4140514">0.2787 ± 0.044</span></p></td><td class="cl-c418f1aa"><p class="cl-c418c392"><span class="cl-c4140514">6.34</span></p></td><td class="cl-c418f1aa"><p class="cl-c418c392"><span class="cl-c4140514">&lt; 0.01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-c418f1ab"><p class="cl-c418c392"><span class="cl-c4140514">Precipitacao</span></p></td><td class="cl-c418f1ab"><p class="cl-c418c392"><span class="cl-c4140514">-4e-04 ± 4e-04</span></p></td><td class="cl-c418f1b4"><p class="cl-c418c392"><span class="cl-c4140514">-1.11</span></p></td><td class="cl-c418f1b4"><p class="cl-c418c392"><span class="cl-c4140514">0.27</span></p></td></tr></tbody></table></div>
+<div class="tabwid"><style>.cl-f355bd30{}.cl-f3473058{font-family:'Arial';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-f34d4740{margin:0;text-align:center;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-f34d800c{width:1.5in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-f34d8016{width:0.75in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-f34d8020{width:1.5in;background-color:rgba(179, 179, 179, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-f34d802a{width:0.75in;background-color:rgba(179, 179, 179, 1.00);vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-f34d802b{width:1.5in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-f34d8034{width:0.75in;background-color:rgba(255, 255, 255, 1.00);vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-f355bd30"><thead><tr style="overflow-wrap:break-word;"><th class="cl-f34d800c"><p class="cl-f34d4740"><span class="cl-f3473058">Predictor</span></p></th><th class="cl-f34d800c"><p class="cl-f34d4740"><span class="cl-f3473058">β1 ± SE</span></p></th><th class="cl-f34d8016"><p class="cl-f34d4740"><span class="cl-f3473058">t</span></p></th><th class="cl-f34d8016"><p class="cl-f34d4740"><span class="cl-f3473058">p</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-f34d8020"><p class="cl-f34d4740"><span class="cl-f3473058">Intercept</span></p></td><td class="cl-f34d8020"><p class="cl-f34d4740"><span class="cl-f3473058">16.7163 ± 1.0109</span></p></td><td class="cl-f34d802a"><p class="cl-f34d4740"><span class="cl-f3473058">16.54</span></p></td><td class="cl-f34d802a"><p class="cl-f34d4740"><span class="cl-f3473058">&lt; 0.01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-f34d8020"><p class="cl-f34d4740"><span class="cl-f3473058">Temperatura</span></p></td><td class="cl-f34d8020"><p class="cl-f34d4740"><span class="cl-f3473058">0.2787 ± 0.044</span></p></td><td class="cl-f34d802a"><p class="cl-f34d4740"><span class="cl-f3473058">6.34</span></p></td><td class="cl-f34d802a"><p class="cl-f34d4740"><span class="cl-f3473058">&lt; 0.01</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-f34d802b"><p class="cl-f34d4740"><span class="cl-f3473058">Precipitacao</span></p></td><td class="cl-f34d802b"><p class="cl-f34d4740"><span class="cl-f3473058">-4e-04 ± 4e-04</span></p></td><td class="cl-f34d8034"><p class="cl-f34d4740"><span class="cl-f3473058">-1.11</span></p></td><td class="cl-f34d8034"><p class="cl-f34d4740"><span class="cl-f3473058">0.27</span></p></td></tr></tbody></table></div>
 <div id="exporting" class="section level2">
 <h2>Exporting</h2>
 <pre class="r"><code>summary_flex |&gt; 

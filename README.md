@@ -29,31 +29,11 @@ To build our table, we use the required packages:
 library(ecodados)
 
 library(tidyverse)
-```
 
-    ## ── Attaching core tidyverse packages ────────────────── tidyverse 2.0.0 ──
-    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
-    ## ✔ forcats   1.0.0     ✔ stringr   1.5.2
-    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
-    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
-    ## ✔ purrr     1.1.0     
-    ## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
-    ## ✖ dplyr::filter() masks stats::filter()
-    ## ✖ dplyr::lag()    masks stats::lag()
-    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
-
-``` r
 library(performance)
 
 library(flextable)
 ```
-
-    ## 
-    ## Anexando pacote: 'flextable'
-    ## 
-    ## O seguinte objeto é mascarado por 'package:purrr':
-    ## 
-    ##     compose
 
 # Data
 
@@ -209,10 +189,10 @@ data |> dplyr::glimpse()
 
     ## Rows: 109
     ## Columns: 4
-    ## $ Municipio    <chr> "Acorizal", "Alpinopolis", "Alto_Paraiso", "America…
-    ## $ CRC          <dbl> 22.98816, 22.91788, 21.97629, 23.32453, 22.83651, 2…
-    ## $ Temperatura  <dbl> 24.13000, 20.09417, 21.86167, 20.28333, 25.47333, 2…
-    ## $ Precipitacao <dbl> 1228.2, 1487.6, 1812.4, 1266.2, 2154.0, 1269.2, 194…
+    ## $ Municipio    [3m[38;5;246m<chr>[39m[23m "Acorizal"[38;5;246m, [39m"Alpinopolis"[38;5;246m, [39m"Alto_Paraiso"[38;5;246m, [39m"America…
+    ## $ CRC          [3m[38;5;246m<dbl>[39m[23m 22.98816[38;5;246m, [39m22.91788[38;5;246m, [39m21.97629[38;5;246m, [39m23.32453[38;5;246m, [39m22.83651[38;5;246m, [39m2…
+    ## $ Temperatura  [3m[38;5;246m<dbl>[39m[23m 24.13000[38;5;246m, [39m20.09417[38;5;246m, [39m21.86167[38;5;246m, [39m20.28333[38;5;246m, [39m25.47333[38;5;246m, [39m2…
+    ## $ Precipitacao [3m[38;5;246m<dbl>[39m[23m 1228.2[38;5;246m, [39m1487.6[38;5;246m, [39m1812.4[38;5;246m, [39m1266.2[38;5;246m, [39m2154.0[38;5;246m, [39m1269.2[38;5;246m, [39m194…
 
 # Modeling
 
@@ -294,7 +274,7 @@ linear_model |> performance::check_model(check = c("vif",
                                                    "normality"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 now we check all assumptions were accepted, we can continue to construct
 our table.
@@ -355,6 +335,14 @@ statistics to readers understand our results:
 
 ## Making a dataframe with summary statístics
 
+When we use a `summary()` function a linear model object, it make a
+objet contening a sub-object, `coefficients`. That’s what contain our
+statistics we want. To acess it, we can use `$` operator, and informing
+sub-object name. Next, we turn it into a dataframe object, using
+`as.data.frame` function, and turn row names into a column, using
+`rownames_to_column()`, from `tibble` package, one of tidyverse
+packages.
+
 ``` r
 summary_table <- linear_model |> 
   summary()
@@ -372,6 +360,19 @@ summary_table
     ## 3 Precipitacao -0.0004269526 0.0003852369 -1.108286 2.702468e-01
 
 ## Editing the table
+
+Next step is to edit our dataframe. First, using `mutate()` function,
+from `dplyr` package, one of tidyverse packages, we:
+
+- Around `Estimate` and `Std. Error` columns decimal values count to
+  only 4;
+
+- Around `t value` column decimal values count to only 2;
+
+- Replace `Pr(>|t|)` values \< 0.01, to character “\< 0.01” and around
+  else ones to only 3 decimal values as character;
+
+- Removindo strings `(` and `)` on line intercept in `rowname` column.
 
 ``` r
 summary_table_trat <- summary_table |>
@@ -413,7 +414,7 @@ summary_flex <- summary_table_trat |>
 summary_flex
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-9-1.png" width="900" />
+<img src="README_files/figure-gfm/unnamed-chunk-19-1.png" width="900" />
 
 ## Exporting
 
