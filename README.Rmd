@@ -157,7 +157,7 @@ summary_table
 
 ## Editing the table 
 
-Next step is to edit our dataframe. First, using `mutate()` function, from `dplyr` package, one of tidyverse packages, we:
+Next step is to edit our dataframe. First, using `mutate()` function, from `dplyr` package, one of tidyverse packages, to:
 
 - Around `Estimate` and `Std. Error` columns decimal values count to only 4;
 
@@ -165,7 +165,15 @@ Next step is to edit our dataframe. First, using `mutate()` function, from `dply
 
 - Replace `Pr(>|t|)` values < 0.01, to character "< 0.01" and around else ones to only 3 decimal values as character;
 
-- Removindo strings `(` and `)` on line intercept in `rowname` column. 
+- Removindo strings `(` and `)` on line intercept in `rowname` column.
+
+Next, we use `unite()` function, from `tidyr` package, one of tidyverse packages, to unite `Estimate` and `Std. Error` in a single column named `β1 ± SE`, where values are separeted by `" ± "`. Finally, we use `rename()` function(), from `dplyr` package, to:
+
+- Replace `rowname` to `Predictor`;
+
+- Replace `t value` to `t`;
+
+- Replace `Pr(>|t|)` to `p`.
 
 ```{r}
 summary_table_trat <- summary_table |>

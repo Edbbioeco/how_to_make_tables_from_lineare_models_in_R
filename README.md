@@ -274,7 +274,7 @@ linear_model |> performance::check_model(check = c("vif",
                                                    "normality"))
 ```
 
-![](README_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+![](README_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 now we check all assumptions were accepted, we can continue to construct
 our table.
@@ -362,7 +362,7 @@ summary_table
 ## Editing the table
 
 Next step is to edit our dataframe. First, using `mutate()` function,
-from `dplyr` package, one of tidyverse packages, we:
+from `dplyr` package, one of tidyverse packages, to:
 
 - Around `Estimate` and `Std. Error` columns decimal values count to
   only 4;
@@ -373,6 +373,17 @@ from `dplyr` package, one of tidyverse packages, we:
   else ones to only 3 decimal values as character;
 
 - Removindo strings `(` and `)` on line intercept in `rowname` column.
+
+Next, we use `unite()` function, from `tidyr` package, one of tidyverse
+packages, to unite `Estimate` and `Std. Error` in a single column named
+`β1 ± SE`, where values are separeted by `" ± "`. Finally, we use
+`rename()` function(), from `dplyr` package, to:
+
+- Replace `rowname` to `Predictor`;
+
+- Replace `t value` to `t`;
+
+- Replace `Pr(>|t|)` to `p`.
 
 ``` r
 summary_table_trat <- summary_table |>
@@ -414,7 +425,7 @@ summary_flex <- summary_table_trat |>
 summary_flex
 ```
 
-<img src="README_files/figure-gfm/unnamed-chunk-19-1.png" width="900" />
+<img src="README_files/figure-gfm/unnamed-chunk-9-1.png" width="900" />
 
 ## Exporting
 
