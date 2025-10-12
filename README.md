@@ -29,11 +29,31 @@ To build our table, we use the required packages:
 library(ecodados)
 
 library(tidyverse)
+```
 
+    ## ── Attaching core tidyverse packages ────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.5
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.2
+    ## ✔ ggplot2   4.0.0     ✔ tibble    3.3.0
+    ## ✔ lubridate 1.9.4     ✔ tidyr     1.3.1
+    ## ✔ purrr     1.1.0     
+    ## ── Conflicts ──────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
 library(performance)
 
 library(flextable)
 ```
+
+    ## 
+    ## Anexando pacote: 'flextable'
+    ## 
+    ## O seguinte objeto é mascarado por 'package:purrr':
+    ## 
+    ##     compose
 
 # Data
 
@@ -189,10 +209,10 @@ data |> dplyr::glimpse()
 
     ## Rows: 109
     ## Columns: 4
-    ## $ Municipio    [3m[38;5;246m<chr>[39m[23m "Acorizal"[38;5;246m, [39m"Alpinopolis"[38;5;246m, [39m"Alto_Paraiso"[38;5;246m, [39m"America…
-    ## $ CRC          [3m[38;5;246m<dbl>[39m[23m 22.98816[38;5;246m, [39m22.91788[38;5;246m, [39m21.97629[38;5;246m, [39m23.32453[38;5;246m, [39m22.83651[38;5;246m, [39m2…
-    ## $ Temperatura  [3m[38;5;246m<dbl>[39m[23m 24.13000[38;5;246m, [39m20.09417[38;5;246m, [39m21.86167[38;5;246m, [39m20.28333[38;5;246m, [39m25.47333[38;5;246m, [39m2…
-    ## $ Precipitacao [3m[38;5;246m<dbl>[39m[23m 1228.2[38;5;246m, [39m1487.6[38;5;246m, [39m1812.4[38;5;246m, [39m1266.2[38;5;246m, [39m2154.0[38;5;246m, [39m1269.2[38;5;246m, [39m194…
+    ## $ Municipio    <chr> "Acorizal", "Alpinopolis", "Alto_Paraiso", "America…
+    ## $ CRC          <dbl> 22.98816, 22.91788, 21.97629, 23.32453, 22.83651, 2…
+    ## $ Temperatura  <dbl> 24.13000, 20.09417, 21.86167, 20.28333, 25.47333, 2…
+    ## $ Precipitacao <dbl> 1228.2, 1487.6, 1812.4, 1266.2, 2154.0, 1269.2, 194…
 
 # Modeling
 
@@ -412,6 +432,21 @@ summary_table_trat
 
 # Turning into a flextable
 
+Finally, our final step is to make a table, using `flextable` package,
+when we use:
+
+- `flextable()`: turn dataframe into a flextable;
+
+- `align()`: align columns to center (`align = "center"`), for every
+  table parts (`part = "all"`);
+
+- `width()`: set columns width to 1.5 (`width = 1.5`), and 0.75 to only
+  3rd and 4th columns (`width = 0.75, j = 3:4`);
+
+- `bg()`: colour backgroung to white in every table parts
+  (`bg = "white", part = "all"`) and gray to rows which p \< 0.05
+  (`i = ~p < 0.05, bg = "gray80"`).
+
 ``` r
 summary_flex <- summary_table_trat |> 
   flextable::flextable() |> 
@@ -420,7 +455,7 @@ summary_flex <- summary_table_trat |>
   flextable::width(width = 0.75, j = 3:4) |> 
   flextable::bg(bg = "white", part = "all") |> 
   flextable::bg(i = ~p < 0.05,
-                bg = "gray70")
+                bg = "gray80")
 
 summary_flex
 ```
@@ -428,6 +463,9 @@ summary_flex
 <img src="README_files/figure-gfm/unnamed-chunk-9-1.png" width="900" />
 
 ## Exporting
+
+Now we have a full-made flextable table, we can export, as a .docx file,
+using `save_as_docx()` function, from `flextable` package.
 
 ``` r
 summary_flex |> 

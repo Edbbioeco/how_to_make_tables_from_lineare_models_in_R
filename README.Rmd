@@ -197,6 +197,16 @@ summary_table_trat
 
 # Turning into a flextable
 
+Finally, our final step is to make a table, using `flextable` package, when we use:
+
+- `flextable()`: turn dataframe into a flextable;
+
+- `align()`: align columns to center (`align = "center"`), for every table parts (`part = "all"`);
+
+- `width()`: set columns width to 1.5 (`width = 1.5`), and 0.75 to only 3rd and 4th columns (`width = 0.75, j = 3:4`);
+
+- `bg()`: colour backgroung to white in every table parts (`bg = "white", part = "all"`) and gray to rows which p < 0.05 (`i = ~p < 0.05, bg = "gray80"`).
+
 ```{r}
 summary_flex <- summary_table_trat |> 
   flextable::flextable() |> 
@@ -205,12 +215,14 @@ summary_flex <- summary_table_trat |>
   flextable::width(width = 0.75, j = 3:4) |> 
   flextable::bg(bg = "white", part = "all") |> 
   flextable::bg(i = ~p < 0.05,
-                bg = "gray70")
+                bg = "gray80")
 
 summary_flex
 ```
 
 ## Exporting
+
+Now we have a full-made flextable table, we can export, as a .docx file, using `save_as_docx()` function, from `flextable` package.
 
 ```{r}
 summary_flex |> 
